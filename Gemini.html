@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEULA | Future Design Collective</title>
+    <style>
+        /* 基本設定・リセット */
+        :root {
+            --bg-color: #050505;
+            --text-main: #f0f0f0;
+            --text-sub: #888888;
+            --accent: #7000ff;
+            --accent-glow: rgba(112, 0, 255, 0.4);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --font-main: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* 背景のアニメーション装飾 */
+        .bg-gradient {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, #1a0b2e 0%, #000000 50%);
+            z-index: -1;
+            animation: pulse 15s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        /* ヘッダー */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--text-main);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--text-main);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* メインビジュアル */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            line-height: 0.9;
+            font-weight: 800;
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+        }
+
+        .hero p {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            color: var(--text-sub);
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.8s;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.5;
+        }
+
+        .line {
+            width: 1px;
+            height: 60px;
+            background: var(--text-sub);
+            animation: scrollLine 2s infinite;
+        }
+
+        @keyframes scrollLine {
+            0% { transform-origin: top; transform: scaleY(0); }
+            50% { transform-origin: top; transform: scaleY(1); }
+            51% { transform-origin: bottom; transform: scaleY(1); }
+            100% { transform-origin: bottom; transform: scaleY(0); }
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ギャラリーセクション */
+        .section {
+            padding: 10rem 10%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: 0.4s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+            opacity: 0;
+            transition: 0.4s;
+            transform: scale(0.5);
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card p {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* フッター */
+        footer {
+            padding: 4rem 10%;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+        }
+
+        .socials {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .section { padding: 5rem 5%; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            nav { display: none; } /* 簡易版のためモバイルメニューは非表示 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <header>
+        <div class="logo">NEULA.</div>
+        <nav>
+            <ul>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">Studio</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Digital<br>Alchemy.</h1>
+        <p>未踏の領域をデザインする。<br>私たちはテクノロジーと感性を融合させるクリエイティブ・コレクティブです。</p>
+        
+        <div class="scroll-indicator">
+            <span>SCROLL</span>
+            <div class="line"></div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header">
+            <span class="section-title">Selected Works</span>
+            <span style="color: var(--text-sub)">2024 - 2026 Collection</span>
+        </div>
+
+        <div class="gallery-grid">
+            <article class="card">
+                <div class="card-number">01</div>
+                <h3>Cyber Void</h3>
+                <p>没入型Web空間の構築と実験的UIデザイン。</p>
+            </article>
+            <article class="card">
+                <div class="card-number">02</div>
+                <h3>Neon Symphony</h3>
+                <p>AIが生成する音と光のインスタレーション。</p>
+            </article>
+            <article class="card">
+                <div class="card-number">03</div>
+                <h3>Liquid Brand</h3>
+                <p>流動的なアイデンティティを持つ次世代ブランディング。</p>
+            </article>
+            <article class="card">
+                <div class="card-number">04</div>
+                <h3>Glass Interface</h3>
+                <p>透明性をテーマにしたOSコンセプト。</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="section" style="text-align: center;">
+        <h2 style="font-size: 2rem; margin-bottom: 2rem;">Let's create the future.</h2>
+        <a href="#" style="display: inline-block; padding: 1rem 3rem; border: 1px solid var(--text-main); border-radius: 50px; font-weight: bold; transition: 0.3s; background: transparent; color: white;">
+            CONTACT US
+        </a>
+    </section>
+
+    <footer>
+        <div>&copy; 2026 NEULA Design Collective.</div>
+        <div class="socials">
+            <a href="#">Tw</a>
+            <a href="#">Ig</a>
+            <a href="#">Li</a>
+        </div>
+    </footer>
+
+    <script>
+        // シンプルなスクロールフェードインアニメーション
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach((el, index) => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(50px)";
+            el.style.transition = `all 0.6s ease-out ${index * 0.1}s`; // 遅延を追加して順番に出現
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
